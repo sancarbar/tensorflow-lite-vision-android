@@ -1,2 +1,2 @@
-# tensorflow-lite-vision-android
-Example of using TensorFlow lite on Android App to detect text and labels from an image.
+# TensorFlow Lite Vision Android App
+Example of using TensorFlow lite on an Android App to detect text and labels from an image.
