@@ -14,8 +14,12 @@ import androidx.camera.core.ImageCaptureException
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
+import com.google.mlkit.vision.common.InputImage
+import com.google.mlkit.vision.label.ImageLabeling
+import com.google.mlkit.vision.label.defaults.ImageLabelerOptions
 import org.adaschool.tflite.vision.android.databinding.ActivityMainBinding
 import java.io.File
+import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -70,6 +74,7 @@ class MainActivity : AppCompatActivity() {
     private fun newPhoto() {
         startCamera()
         binding.photoImageView.visibility = View.GONE
+        binding.labelsTextView.visibility = View.GONE
         binding.newPhotoButton.visibility = View.GONE
         binding.cameraPreviewView.visibility = View.VISIBLE
         binding.capturePhotoButton.visibility = View.VISIBLE
@@ -105,7 +110,7 @@ class MainActivity : AppCompatActivity() {
     private fun takePhoto() {
         binding.progressBar.visibility = View.VISIBLE
         binding.capturePhotoButton.visibility = View.GONE
-
+        binding.cameraPreviewView.visibility = View.GONE
 
         val imageCapture = imageCapture ?: return
         val photoFile = File(
@@ -132,10 +137,43 @@ class MainActivity : AppCompatActivity() {
                     binding.photoImageView.visibility = View.VISIBLE
                     binding.progressBar.visibility = View.GONE
                     binding.photoImageView.setImageURI(photoUri)
-                    binding.cameraPreviewView.visibility = View.GONE
+                    detectLabels()
                 }
             }
         )
+    }
+
+    private fun detectLabels() {
+        try {
+            val image = InputImage.fromFilePath(this, photoUri)
+            val labeler = ImageLabeling.getClient(ImageLabelerOptions.DEFAULT_OPTIONS)
+            labeler.process(image)
+                .addOnSuccessListener { labels ->
+                    val labelsString = StringBuilder()
+                    for (label in labels) {
+                        labelsString.append(
+                            "${label.text}  ->  ${
+                                String.format(
+                                    "%.1f",
+                                    label.confidence * 100
+                                )
+                            }%\n"
+                        )
+                    }
+                    runOnUiThread {
+                        binding.labelsTextView.text = labelsString.toString()
+                        binding.labelsTextView.visibility = View.VISIBLE
+                        binding.progressBar.visibility = View.GONE
+                        binding.newPhotoButton.visibility = View.VISIBLE
+                    }
+
+                }
+                .addOnFailureListener { e ->
+                    Log.e(TAG, "Error: $e")
+                }
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
     }
 
     private fun stopCamera() {
