@@ -1,0 +1,5 @@
+<resources>
+    <string name="new_photo">Nueva Foto</string>
+    <string name="capture_photo">tomar foto</string>
+    <string name="captured_image_preview">Visualización foto tomada</string>
+</resources>
