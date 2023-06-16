@@ -13,10 +13,10 @@
 
     <ImageView
         android:id="@+id/photoImageView"
-        android:visibility="gone"
         android:layout_width="400dp"
         android:layout_height="400dp"
         android:contentDescription="@string/captured_image_preview"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -33,50 +33,76 @@
         app:layout_constraintTop_toTopOf="parent" />
 
 
-    <TextView
-        android:id="@+id/labelsTextView"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:gravity="center"
-        android:padding="10dp"
-        android:textColor="@color/black"
-        android:textSize="18sp"
-        android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayoutCompat"
-        app:layout_constraintTop_toBottomOf="@+id/photoImageView"
-        tools:text="Etiqueta1 -> confidencia: 90%\nEtiqueta1 ->
+        android:layout_height="260dp"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayoutCompat">
+
+        <TextView
+            android:id="@+id/labelsTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:gravity="center"
+            android:padding="10dp"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:visibility="gone"
+            tools:text="Etiqueta1 -> confidencia: 90%\nEtiqueta1 ->
         confidencia: 90%" />
+    </ScrollView>
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/linearLayoutCompat"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="@+id/cameraPreviewView"
         app:layout_constraintEnd_toEndOf="parent"
-        android:gravity="center"
         app:layout_constraintStart_toStartOf="parent">
 
         <Button
-            android:text="@string/new_photo"
             android:id="@+id/newPhotoButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:layout_weight="1"
-            android:padding="20dp"
-            android:visibility="gone" />
+            android:padding="15dp"
+            android:text="@string/new_photo"
+            android:visibility="gone"
+            tools:visibility="visible" />
 
+        <Button
+            android:id="@+id/findLabelsButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:padding="15dp"
+            android:text="@string/find_labels"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+        <Button
+            android:id="@+id/extractTextButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:padding="15dp"
+            android:text="@string/extract_text"
+            android:visibility="gone"
+            tools:visibility="visible" />
 
         <ImageButton
             android:id="@+id/capturePhotoButton"
             android:layout_width="96dp"
             android:layout_height="96dp"
-            android:layout_margin="10dp"
             android:layout_gravity="bottom|center"
-            android:contentDescription="@string/capture_photo"
+            android:layout_margin="10dp"
             android:background="@drawable/ic_shutter"
+            android:contentDescription="@string/capture_photo"
             android:scaleType="fitCenter" />
 
 

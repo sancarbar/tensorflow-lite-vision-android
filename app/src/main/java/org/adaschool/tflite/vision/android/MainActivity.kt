@@ -17,6 +17,8 @@ import androidx.core.content.ContextCompat
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.label.ImageLabeling
 import com.google.mlkit.vision.label.defaults.ImageLabelerOptions
+import com.google.mlkit.vision.text.TextRecognition
+import com.google.mlkit.vision.text.latin.TextRecognizerOptions
 import org.adaschool.tflite.vision.android.databinding.ActivityMainBinding
 import java.io.File
 import java.io.IOException
@@ -69,6 +71,21 @@ class MainActivity : AppCompatActivity() {
     private fun setClickListeners() {
         binding.capturePhotoButton.setOnClickListener { takePhoto() }
         binding.newPhotoButton.setOnClickListener { newPhoto() }
+        binding.findLabelsButton.setOnClickListener { detectLabels() }
+        binding.extractTextButton.setOnClickListener { extractText() }
+    }
+
+    private fun extractText() {
+        val image = InputImage.fromFilePath(this, photoUri)
+        val recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
+        recognizer.process(image)
+            .addOnSuccessListener { visionText ->
+                binding.labelsTextView.text = visionText.text
+                binding.labelsTextView.visibility = View.VISIBLE
+            }
+            .addOnFailureListener { e ->
+                Log.e(TAG, "Error extracting text: $e")
+            }
     }
 
     private fun newPhoto() {
@@ -76,6 +93,8 @@ class MainActivity : AppCompatActivity() {
         binding.photoImageView.visibility = View.GONE
         binding.labelsTextView.visibility = View.GONE
         binding.newPhotoButton.visibility = View.GONE
+        binding.findLabelsButton.visibility = View.GONE
+        binding.extractTextButton.visibility = View.GONE
         binding.cameraPreviewView.visibility = View.VISIBLE
         binding.capturePhotoButton.visibility = View.VISIBLE
     }
@@ -133,17 +152,19 @@ class MainActivity : AppCompatActivity() {
                 override fun onImageSaved(output: ImageCapture.OutputFileResults) {
                     stopCamera()
                     photoUri = Uri.fromFile(photoFile)
+                    binding.photoImageView.setImageURI(photoUri)
                     binding.newPhotoButton.visibility = View.VISIBLE
+                    binding.findLabelsButton.visibility = View.VISIBLE
+                    binding.extractTextButton.visibility = View.VISIBLE
                     binding.photoImageView.visibility = View.VISIBLE
                     binding.progressBar.visibility = View.GONE
-                    binding.photoImageView.setImageURI(photoUri)
-                    detectLabels()
                 }
             }
         )
     }
 
     private fun detectLabels() {
+        binding.progressBar.visibility = View.VISIBLE
         try {
             val image = InputImage.fromFilePath(this, photoUri)
             val labeler = ImageLabeling.getClient(ImageLabelerOptions.DEFAULT_OPTIONS)
@@ -163,8 +184,10 @@ class MainActivity : AppCompatActivity() {
                     runOnUiThread {
                         binding.labelsTextView.text = labelsString.toString()
                         binding.labelsTextView.visibility = View.VISIBLE
-                        binding.progressBar.visibility = View.GONE
                         binding.newPhotoButton.visibility = View.VISIBLE
+                        binding.findLabelsButton.visibility = View.VISIBLE
+                        binding.extractTextButton.visibility = View.VISIBLE
+                        binding.progressBar.visibility = View.GONE
                     }
 
                 }

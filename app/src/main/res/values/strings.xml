@@ -3,4 +3,6 @@
     <string name="new_photo">New Photo</string>
     <string name="capture_photo">capture photo</string>
     <string name="captured_image_preview">captured image preview</string>
+    <string name="find_labels">Find Labels</string>
+    <string name="extract_text">Extract Text</string>
 </resources>

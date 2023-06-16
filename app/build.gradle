@@ -51,6 +51,8 @@ dependencies {
 
     //Tensorflow lite - Image Labeleing
     implementation 'com.google.mlkit:image-labeling:17.0.7'
+    //Tensorflow lite - To recognize Latin script
+    implementation 'com.google.mlkit:text-recognition:16.0.0'
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
